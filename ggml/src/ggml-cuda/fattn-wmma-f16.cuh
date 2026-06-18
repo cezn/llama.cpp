@@ -12,9 +12,6 @@
 #elif defined(CDNA)
 #warning "rocwmma fattn on CDNA is broken on rocwmma v2.0.0, expect degraded performance"
 #endif // defined(CDNA) && (ROCWMMA_VERSION_MAJOR < 2 || ROCWMMA_VERSION_MINOR > 0 || ROCWMMA_VERSION_PATCH > 0)
-#if defined(RDNA3)
-#define GGML_USE_WMMA_FATTN
-#endif // defined(RDNA3)
 #if defined(RDNA4) && ROCWMMA_VERSION_MAJOR > 1
 #define GGML_USE_WMMA_FATTN
 #elif defined(RDNA4)
@@ -42,6 +39,9 @@ static bool ggml_cuda_should_use_wmma_fattn(const int cc) {
 #else
         return false;
 #endif // defined(GGML_HIP_ROCWMMA_FATTN) && ROCWMMA_VERSION_MAJOR > 1
+    } else if (GGML_CUDA_CC_IS_RDNA3(cc)) {
+        // RDNA3 explicitly excluded from rocWMMA flash attention
+        return false;
     } else {
         return false;
     }
