@@ -1159,7 +1159,7 @@ private:
         model_tgt = llama_init->model();
         ctx_tgt   = llama_init->context();
 
-        if (model_tgt == nullptr) {
+        if (model_tgt == nullptr || ctx_tgt == nullptr) {
             SRV_ERR("failed to load model, '%s'\n", params_base.model.path.c_str());
             return false;
         }
